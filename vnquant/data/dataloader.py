@@ -41,7 +41,7 @@ class DataLoader():
         if self.minimal:
             # logging.info(stock_data)
             if str.lower(self.data_source) == 'vnd':
-                data = stock_data[['high','low','open','close', 'avg', 'volume']]
+                data = stock_data[['high','low','open','close', 'volume']]
                 return data
             else:
                 data = stock_data[['high', 'low', 'open', 'close', 'adjust', 'volume']]
