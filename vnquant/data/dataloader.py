@@ -214,7 +214,7 @@ class DataLoaderVND(DataLoadProto):
         except:
             last_page = int(text_div)
         return last_page
-
+#======================================================
 class DataLoaderCAFE(DataLoadProto):
     def __init__(self, symbols, start, end, *arg, **karg):
         self.symbols = symbols
@@ -236,9 +236,7 @@ class DataLoaderCAFE(DataLoadProto):
         return data
 
     def download_one(self, symbol):
-        stock_data = pd.DataFrame(columns=['date', 'change_perc1', 'change_perc2',
-                                           'open', 'high', 'low', 'close',
-                                           'avg', 'volume_match', 'volume_reconcile'])
+        stock_data = pd.DataFrame(columns=['date', 'open', 'high', 'low', 'close', 'volume_match'])
 
         for i in range(1000):
             stock_slice_batch = self.download_batch(i + 1, symbol)
@@ -294,8 +292,8 @@ class DataLoaderCAFE(DataLoadProto):
         table = soup.find('table')
         stock_slice_batch = pd.read_html(str(table))[0].iloc[2:, :12]
 
-        stock_slice_batch.columns = ['date', 'adjust', 'close', 'change_perc', 'avg',
-                        'volume_match', 'value_match', 'volume_reconcile', 'value_reconcile',
+        stock_slice_batch.columns = ['date', 'close',  
+                        'volume_match',  
                         'open', 'high', 'low']
 
         return stock_slice_batch
