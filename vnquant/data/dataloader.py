@@ -251,7 +251,7 @@ class DataLoaderCAFE(DataLoadProto):
             if is_touch_end:
                 break
 
-        stock_data['change_perc1'], stock_data['change_perc2'] = stock_data['change_perc'].apply(utils.split_change_col).str
+        #stock_data['change_perc1'], stock_data['change_perc2'] = stock_data['change_perc'].apply(utils.split_change_col).str
         if 'change_perc' in stock_data.columns:
             stock_data.pop('change_perc')
         if 'avg' in stock_data.columns:
