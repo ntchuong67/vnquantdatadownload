@@ -290,7 +290,7 @@ class DataLoaderCAFE(DataLoadProto):
         soup = BeautifulSoup(r.content, 'html.parser')
         # print(soup)
         table = soup.find('table')
-        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:, :12]
+        stock_slice_batch = pd.read_html(str(table))[0].iloc[2:, :6]
 
         stock_slice_batch.columns = ['date', 'close',  
                         'volume_match',  
