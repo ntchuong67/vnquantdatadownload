@@ -109,7 +109,7 @@ try:
 	
 	returns = expected_returns.returns_from_prices(stocks_df, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
-	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(data2))
+	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df))
 	weight_hrp = hrp.optimize()
 	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
 	
