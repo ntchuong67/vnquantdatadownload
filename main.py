@@ -16,7 +16,7 @@ from pypfopt import black_litterman
 from pypfopt import plotting
 import streamlit as st
 from datetime import datetime
-from app.vnquantdatadownload import vnquant 
+#from app.vnquantdatadownload import vnquant 
 import matplotlib.pyplot as plt
 import copy
 import plotly.express as px
@@ -66,12 +66,13 @@ tickers = tickers_string.split(',')
 
 
 try:
-    loader = dt.DataLoader([tickers_string], start_date ,end_date, minimal=True, data_source = "cafe")   
-    data= loader.download()
-    data=data.stack()
-    data=data.reset_index()     
-    data1 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	%ls  
+	#loader = dt.DataLoader([tickers_string], start_date ,end_date, minimal=True, data_source = "cafe")   
+	#data= loader.download()
+	#data=data.stack()
+	#data=data.reset_index()     
+	#data1 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 
 except:
-    st.write('Enter correct stock tickers to be included in portfolio separated\
+    	st.write('Enter correct stock tickers to be included in portfolio separated\
               commas WITHOUT spaces, e.g. "TCB,HPG,SSI,MSN"and hit Enter.')	
