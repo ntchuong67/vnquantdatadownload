@@ -85,9 +85,9 @@ try:
 	S = risk_models.sample_cov(stocks_df)
 	
 	# Plot efficient frontier curve
-	fig = plot_efficient_frontier_and_max_sharpe(mu, S)
-	fig_efficient_frontier = BytesIO()
-	fig.savefig(fig_efficient_frontier, format="png")
+	#fig = plot_efficient_frontier_and_max_sharpe(mu, S)
+	#fig_efficient_frontier = BytesIO()
+	#fig.savefig(fig_efficient_frontier, format="png")
 	
 	# Get optimized weights
 	ef = EfficientFrontier(mu, S)
@@ -112,8 +112,8 @@ try:
 	st.subheader("Optimized Max Sharpe Portfolio Weights")
 	st.dataframe(weights_df)
 	
-	st.subheader("Optimized Max Sharpe Portfolio Performance")
-	st.image(fig_efficient_frontier)
+	#st.subheader("Optimized Max Sharpe Portfolio Performance")
+	#st.image(fig_efficient_frontier)
 	
 	st.subheader('Expected annual return: {}%'.format((expected_annual_return*100).round(2)))
 	st.subheader('Annual volatility: {}%'.format((annual_volatility*100).round(2)))
