@@ -71,7 +71,7 @@ try:
 	data=data.stack()
 	data=data.reset_index()     
 	stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	st.dataframe(data1)
+	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
 	fig_price = px.line(stocks_df, title='Price of Individual Stocks')
 	# Plot Individual Cumulative Returns
