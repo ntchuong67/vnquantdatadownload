@@ -139,7 +139,8 @@ try:
 	for ticker, weight in weights.items():
 		stocks_df['Optimized Portfolio Max Sharpe'] += stocks_df[ticker]*weight
 	for ticker, weight in weight_hrp.items():
-		stocks_df['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
+		stocks_df2['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
+	stocks_df['Optimized Portfolio HRP']= stocks_df2['Optimized Portfolio HRP']	
 	# Plot Cumulative Returns of Optimized Portfolio
 	fig_cum_returns_optimized = plot_cum_returns(stocks_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 	
