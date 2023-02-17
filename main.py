@@ -141,14 +141,16 @@ try:
 		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
 	
 	# Calculate returns of portfolio with optimized weights
-	full_stocks_df['Optimized Portfolio Max Sharpe'] = 0
-	full_stocks_df2['Optimized Portfolio HRP'] = 0
-	for ticker, weight in weights.items():
-		full_stocks_df['Optimized Portfolio Max Sharpe'] += full_stocks_df[ticker]*weight
-	for ticker, weight in weight_hrp.items():
-		full_stocks_df2['Optimized Portfolio HRP'] += full_stocks_df2[ticker]*weight
-	full_stocks_df['Optimized Portfolio HRP']= full_stocks_df2['Optimized Portfolio HRP']	
 	post_df = full_stocks_df[(full_stocks_df.index > trial_date) & (full_stocks_df.index <= end_date) ]
+	post_df2 = full_stocks_df2[(full_stocks_df2.index > trial_date) & (full_stocks_df2.index <= end_date) ]
+
+	post_df['Optimized Portfolio Max Sharpe'] = 0
+	post_df2['Optimized Portfolio HRP'] = 0
+	for ticker, weight in weights.items():
+		post_df['Optimized Portfolio Max Sharpe'] += post_df[ticker]*weight
+	for ticker, weight in weight_hrp.items():
+		post_df2['Optimized Portfolio HRP'] += post_df2[ticker]*weight
+	post_df['Optimized Portfolio HRP']= post_df2['Optimized Portfolio HRP']	
 
 	# Plot Cumulative Returns of Optimized Portfolio
 	fig_cum_returns_optimized = plot_cum_returns(post_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
