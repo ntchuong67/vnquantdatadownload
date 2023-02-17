@@ -50,7 +50,7 @@ def plot_efficient_frontier_and_max_sharpe(mu, S):
 	return fig
 
 st.set_page_config(page_title = "Stock Portfolio Optimizer - developed by Nguyen Tien Chuong", layout = "wide")
-st.header("Stock Portfolio Optimizer")
+st.header("Stock Portfolio Optimizer - developed by Nguyen Tien Chuong")
 
 col0, col1, col2 = st.columns(3)
 with col0:
@@ -69,17 +69,17 @@ tickers = tickers_string.split(',')
 
 try:
 	#trial data
-	loader = DataLoader(tickers, start_date ,trial_date, minimal=True, data_source = "vnd")   
+	loader = DataLoader(tickers, start_date ,trial_date, minimal=False, data_source = "vnd")   
 	data= loader.download()
 	data=data.stack()
 	data=data.reset_index()     
-	stocks_df = data.pivot_table(values = 'close', index = 'date', columns = 'Symbols').dropna()
+	stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	#full data
 	loader2 = DataLoader(tickers, start_date ,end_date, minimal=True, data_source = "vnd")   
 	data2= loader.download()
 	data2=data2.stack()
 	data2=data2.reset_index()     
-	full_stocks_df = data2.pivot_table(values = 'close', index = 'date', columns = 'Symbols').dropna()
+	full_stocks_df = data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	
 	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
@@ -110,8 +110,8 @@ try:
 	
 	
 	#=======HRP=================
-	stocks_df2 = data.pivot_table(values = 'close', index = 'date', columns = 'Symbols').dropna()
-	full_stocks_df2 =  data2.pivot_table(values = 'close', index = 'date', columns = 'Symbols').dropna()
+	stocks_df2 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	full_stocks_df2 =  data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
