@@ -75,8 +75,8 @@ try:
 	data=data.reset_index()     
 	stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	#full data
-	loader2 = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
-	data2= loader2.download()
+	loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
+	data2= loader.download()
 	data2=data2.stack()
 	data2=data2.reset_index()     
 	full_stocks_df = data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
