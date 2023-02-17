@@ -52,9 +52,11 @@ def plot_efficient_frontier_and_max_sharpe(mu, S):
 st.set_page_config(page_title = "Stock Portfolio Optimizer - developed by Nguyen Tien Chuong", layout = "wide")
 st.header("Stock Portfolio Optimizer")
 
-col1, col2 = st.columns(2)
-with col1:
+col0, col1, col2 = st.columns(3)
+with col0:
     start_date = st.text_input("Start Date, e.g. 2018-01-01")
+with col1:
+    trial_date = st.text_input("End Traning Date, e.g. 2022-01-01")
 with col2:
     end_date = st.text_input("End Date, e.g. 2023-02-01") # it defaults to current date
  
@@ -66,11 +68,19 @@ tickers = tickers_string.split(',')
 
 
 try:
-	loader = DataLoader(tickers, start_date ,end_date, minimal=True, data_source = "cafe")   
+	#trial data
+	loader = DataLoader(tickers, start_date ,trial_date, minimal=True, data_source = "vnd")   
 	data= loader.download()
 	data=data.stack()
 	data=data.reset_index()     
 	stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	#full data
+	loader2 = DataLoader(tickers, start_date ,end_date, minimal=True, data_source = "vnd")   
+	data2= loader.download()
+	data2=data2.stack()
+	data2=data2.reset_index()     
+	full_stocks_df = data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	
 	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
 	fig_price = px.line(stocks_df, title='Price of Individual Stocks')
@@ -101,7 +111,8 @@ try:
 	
 	#=======HRP=================
 	stocks_df2 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-
+	full_stocks_df2 =  data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
 	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df2))
@@ -134,13 +145,13 @@ try:
 		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
 	
 	# Calculate returns of portfolio with optimized weights
-	stocks_df['Optimized Portfolio Max Sharpe'] = 0
-	stocks_df2['Optimized Portfolio HRP'] = 0
+	full_stocks_df['Optimized Portfolio Max Sharpe'] = 0
+	full_stocks_df2['Optimized Portfolio HRP'] = 0
 	for ticker, weight in weights.items():
-		stocks_df['Optimized Portfolio Max Sharpe'] += stocks_df[ticker]*weight
+		full_stocks_df['Optimized Portfolio Max Sharpe'] += full_stocks_df[ticker]*weight
 	for ticker, weight in weight_hrp.items():
-		stocks_df2['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
-	stocks_df['Optimized Portfolio HRP']= stocks_df2['Optimized Portfolio HRP']	
+		full_stocks_df2['Optimized Portfolio HRP'] += full_stocks_df2[ticker]*weight
+	full_stocks_df['Optimized Portfolio HRP']= full_stocks_df2['Optimized Portfolio HRP']	
 	# Plot Cumulative Returns of Optimized Portfolio
 	fig_cum_returns_optimized = plot_cum_returns(stocks_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 	
