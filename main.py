@@ -73,6 +73,7 @@ try:
 	data=data.reset_index()     
 	data1 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 
-except:
-    	st.write('Enter correct stock tickers to be included in portfolio separated\
+except Exception as e:
+	st.write(e)
+	st.write('Enter correct stock tickers to be included in portfolio separated\
               commas WITHOUT spaces, e.g. "TCB,HPG,SSI,MSN"and hit Enter.')	
