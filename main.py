@@ -66,7 +66,7 @@ tickers = tickers_string.split(',')
 
 
 try:
-	loader = DataLoader([tickers_string], start_date ,end_date, minimal=True, data_source = "cafe")   
+	loader = DataLoader(tickers, start_date ,end_date, minimal=True, data_source = "cafe")   
 	st.write('done')
 	data= loader.download()
 	data=data.stack()
