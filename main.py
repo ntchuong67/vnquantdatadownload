@@ -72,7 +72,7 @@ try:
 	data=data.stack()
 	data=data.reset_index()     
 	data1 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-
+	st.dataframe(data1)
 except Exception as e:
 	st.write(e)
 	st.write('Enter correct stock tickers to be included in portfolio separated\
