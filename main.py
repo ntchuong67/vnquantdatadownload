@@ -8,7 +8,6 @@ Created on Fri Feb 17 18:08:04 2023
 import pandas as pd
 import numpy as np
 
-%cd vnquantdatadownload
 from pypfopt import EfficientFrontier
 from pypfopt import risk_models
 from pypfopt import expected_returns
