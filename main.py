@@ -108,8 +108,12 @@ try:
 	weight_hrp = hrp.optimize()
 	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
 	
-
-	
+	#====PLOTTING========================================
+	# Display everything on Streamlit
+	st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
+	st.plotly_chart(fig_price)
+	st.plotly_chart(fig_cum_returns)
+	#Weights of portfolios
 	col3, col4 = st.columns(2)
 	with col3:
 		st.subheader("Optimized Max Sharpe Portfolio Weights")
@@ -128,18 +132,17 @@ try:
 		st.subheader('Expected annual return: {}%'.format((expected_annual_return_hrp*100).round(2)))
 		st.subheader('Annual volatility: {}%'.format((annual_volatility_hrp*100).round(2)))
 		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
-	st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
-	st.plotly_chart(fig_price)
-	st.plotly_chart(fig_cum_returns)
+	
 	# Calculate returns of portfolio with optimized weights
 	stocks_df['Optimized Portfolio Max Sharpe'] = 0
 	stocks_df2['Optimized Portfolio HRP'] = 0
 	for ticker, weight in weights.items():
 		stocks_df['Optimized Portfolio Max Sharpe'] += stocks_df[ticker]*weight
-		stocks_df2['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
+	for ticker, weight in weight_hrp.items():
+		stocks_df['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
 	# Plot Cumulative Returns of Optimized Portfolio
-	fig_cum_returns_optimized = plot_cum_returns([stocks_df['Optimized Portfolio Max Sharpe'],stocks_df2['Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
-	# Display everything on Streamlit
+	fig_cum_returns_optimized = plot_cum_returns(stocks_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
+	
 	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
 	st.plotly_chart(fig_cum_returns_optimized)
 except Exception as e:
