@@ -35,7 +35,7 @@ def plot_efficient_frontier_and_max_sharpe(mu, S):
 	ef_max_sharpe = copy.copy(ef)
 	plotting.plot_efficient_frontier(ef, ax=ax, show_assets=False)
 	# Find the max sharpe portfolio
-	ef_max_sharpe.max_sharpe(risk_free_rate=0.02)
+	ef_max_sharpe.max_sharpe()
 	ret_tangent, std_tangent, _ = ef_max_sharpe.portfolio_performance()
 	ax.scatter(std_tangent, ret_tangent, marker="*", s=100, c="r", label="Max Sharpe")
 	# Generate random portfolios
@@ -91,7 +91,7 @@ try:
 	
 	# Get optimized weights
 	ef = EfficientFrontier(mu, S)
-	ef.max_sharpe(risk_free_rate=0.02)
+	ef.max_sharpe()
 	weights = ef.clean_weights()
 	expected_annual_return, annual_volatility, sharpe_ratio = ef.portfolio_performance()
 	weights_df = pd.DataFrame.from_dict(weights, orient = 'index')
