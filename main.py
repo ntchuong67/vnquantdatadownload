@@ -16,7 +16,7 @@ from pypfopt import black_litterman
 from pypfopt import plotting
 import streamlit as st
 from datetime import datetime
-from app.vnquantdatadownload import vnquant 
+from .app.vnquantdatadownload import vnquant 
 import matplotlib.pyplot as plt
 import copy
 import plotly.express as px
