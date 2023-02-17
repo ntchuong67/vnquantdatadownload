@@ -59,7 +59,7 @@ with col2:
     end_date = st.text_input("End Date, e.g. 2023-02-01") # it defaults to current date
  
 tickers_string = st.text_input('Enter all stock tickers to be included in portfolio separated by commas \
- WITHOUT spaces, e.g. "TCB","SSI","VHC","VHM","HBC","FPT","HPG","HVN","TRA","POW"', '').upper()
+ WITHOUT spaces, e.g. TCB,HPG,SSI,MSN', '').upper()
 tickers = tickers_string.split(',')
 
 
@@ -97,19 +97,14 @@ try:
 	weights_df = pd.DataFrame.from_dict(weights, orient = 'index')
 	weights_df.columns = ['weights']
 	
-	# Calculate returns of portfolio with optimized weights
-	stocks_df['Optimized Portfolio'] = 0
-	for ticker, weight in weights.items():
-		stocks_df['Optimized Portfolio'] += stocks_df[ticker]*weight
 	
-	# Plot Cumulative Returns of Optimized Portfolio
-	fig_cum_returns_optimized = plot_cum_returns(stocks_df['Optimized Portfolio'], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 	
 	#=======HRP=================
-	
-	returns = expected_returns.returns_from_prices(stocks_df, log_returns=False)
+	stocks_df2 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+
+	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
-	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df))
+	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df2))
 	weight_hrp = hrp.optimize()
 	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
 	
@@ -138,6 +133,14 @@ try:
 	st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
 	st.plotly_chart(fig_price)
 	st.plotly_chart(fig_cum_returns)
+	# Calculate returns of portfolio with optimized weights
+	stocks_df['Optimized Portfolio Max Sharpe'] = 0
+	stocks_df2['Optimized Portfolio HRP'] = 0
+	for ticker, weight in weights.items():
+		stocks_df['Optimized Portfolio Max Sharpe'] += stocks_df[ticker]*weight
+		stocks_df2['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
+	# Plot Cumulative Returns of Optimized Portfolio
+	fig_cum_returns_optimized = plot_cum_returns([stocks_df['Optimized Portfolio Max Sharpe'],stocks_df2['Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 except Exception as e:
 	st.write(e)
 	st.write('Enter correct stock tickers to be included in portfolio separated\
