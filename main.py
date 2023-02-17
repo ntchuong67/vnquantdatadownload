@@ -76,7 +76,7 @@ try:
 		#full data
 	  
 	full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	stocks_df = full_stocks_df[full_stocks_df['date'] <= trial_date]
+	stocks_df = full_stocks_df[full_stocks_df['date'] <= datetime.strptime(trial_date, '%Y-%m-%d')]
 	
 	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
@@ -108,7 +108,7 @@ try:
 	
 	#=======HRP=================
 	full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	stocks_df2= full_stocks_df2[(full_stocks_df2['date'] <= trial_date )]
+	stocks_df2= full_stocks_df2[(full_stocks_df2['date'] <= datetime.strptime(trial_date, '%Y-%m-%d') )]
 	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
