@@ -105,20 +105,38 @@ try:
 	# Plot Cumulative Returns of Optimized Portfolio
 	fig_cum_returns_optimized = plot_cum_returns(stocks_df['Optimized Portfolio'], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 	
+	#=======HRP=================
+	
+	returns = expected_returns.returns_from_prices(stocks_df, log_returns=False)
+	hierarchical_portfolio.HRPOpt(returns,S)
+	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(data2))
+	weight_hrp = hrp.optimize()
+	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
+	
 	# Display everything on Streamlit
 	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
 	st.plotly_chart(fig_cum_returns_optimized)
 	
-	st.subheader("Optimized Max Sharpe Portfolio Weights")
-	st.dataframe(weights_df)
+	col3, col4 = st.columns(2)
+	with col3:
+   		st.subheader("Optimized Max Sharpe Portfolio Weights")
+		st.dataframe(weights_df)
+	with col4:
+    		st.subheader("Optimized HRP Portfolio Weights")
+		st.dataframe(weight_hrp)
+	
 	
 	#st.subheader("Optimized Max Sharpe Portfolio Performance")
 	#st.image(fig_efficient_frontier)
-	
-	st.subheader('Expected annual return: {}%'.format((expected_annual_return*100).round(2)))
-	st.subheader('Annual volatility: {}%'.format((annual_volatility*100).round(2)))
-	st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio.round(2)))
-	
+	col5, col6 = st.columns(2)
+	with col5:
+		st.subheader('Expected annual return: {}%'.format((expected_annual_return*100).round(2)))
+		st.subheader('Annual volatility: {}%'.format((annual_volatility*100).round(2)))
+		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio.round(2)))
+	with col6:
+		st.subheader('Expected annual return: {}%'.format((expected_annual_return_hrp*100).round(2)))
+		st.subheader('Annual volatility: {}%'.format((annual_volatility_hrp*100).round(2)))
+		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
 	st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
 	st.plotly_chart(fig_price)
 	st.plotly_chart(fig_cum_returns)
