@@ -153,7 +153,7 @@ try:
 		full_stocks_df2['Optimized Portfolio HRP'] += full_stocks_df2[ticker]*weight
 	full_stocks_df['Optimized Portfolio HRP']= full_stocks_df2['Optimized Portfolio HRP']	
 	# Plot Cumulative Returns of Optimized Portfolio
-	fig_cum_returns_optimized = plot_cum_returns(stocks_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
+	fig_cum_returns_optimized = plot_cum_returns(full_stocks_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
 	
 	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
 	st.plotly_chart(fig_cum_returns_optimized)
