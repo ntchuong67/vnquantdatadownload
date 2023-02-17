@@ -76,7 +76,7 @@ try:
 		#full data
 	  
 	full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	stocks_df = full_stocks_df[(full_stocks_df['date'] <= string(trial_date) )]
+	stocks_df = full_stocks_df[full_stocks_df['date'] <= trial_date]
 	
 	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
