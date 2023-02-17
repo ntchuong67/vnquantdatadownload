@@ -106,7 +106,7 @@ try:
 	
 	
 	#=======HRP=================
-	full_stocks_df2 =  data1.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	stocks_df2= full_stocks_df2[full_stocks_df2.index <= trial_date]
 	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
