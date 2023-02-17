@@ -122,7 +122,7 @@ try:
 		st.subheader("Optimized Max Sharpe Portfolio Weights")
 		st.dataframe(weights_df)
 	with col4:
-    		st.subheader("Optimized HRP Portfolio Weights")
+		st.subheader("Optimized HRP Portfolio Weights")
 		st.dataframe(weight_hrp)
 	#st.subheader("Optimized Max Sharpe Portfolio Performance")
 	#st.image(fig_efficient_frontier)
