@@ -54,9 +54,9 @@ st.header("Stock Portfolio Optimizer")
 
 col1, col2 = st.columns(2)
 with col1:
-    start_date = st.date_input("Start Date \ e.g. 2018-01-01 ",datetime(2013, 1, 1))
+    start_date = st.text_input("Start Date, e.g. 2018-01-01")
 with col2:
-    end_date = st.date_input("End Date \ e.g. 2023-02-01") # it defaults to current date
+    end_date = st.text_input("End Date, e.g. 2023-02-01") # it defaults to current date
  
 tickers_string = st.text_input('Enter all stock tickers to be included in portfolio separated by commas \
  WITHOUT spaces, e.g. "TCB","SSI","VHC","VHM","HBC","FPT","HPG","HVN","TRA","POW"', '').upper()
