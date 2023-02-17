@@ -108,9 +108,7 @@ try:
 	weight_hrp = hrp.optimize()
 	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
 	
-	# Display everything on Streamlit
-	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
-	st.plotly_chart(fig_cum_returns_optimized)
+
 	
 	col3, col4 = st.columns(2)
 	with col3:
@@ -141,6 +139,9 @@ try:
 		stocks_df2['Optimized Portfolio HRP'] += stocks_df2[ticker]*weight
 	# Plot Cumulative Returns of Optimized Portfolio
 	fig_cum_returns_optimized = plot_cum_returns([stocks_df['Optimized Portfolio Max Sharpe'],stocks_df2['Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
+	# Display everything on Streamlit
+	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
+	st.plotly_chart(fig_cum_returns_optimized)
 except Exception as e:
 	st.write(e)
 	st.write('Enter correct stock tickers to be included in portfolio separated\
