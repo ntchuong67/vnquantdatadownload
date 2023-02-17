@@ -69,17 +69,14 @@ tickers = tickers_string.split(',')
 
 try:
 	#trial data
-	loader = DataLoader(tickers, start_date ,trial_date, minimal=False, data_source = "vnd")   
+	loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
 	data= loader.download()
 	data=data.stack()
 	data=data.reset_index()     
-	stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	#full data
-	loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
-	data2= loader.download()
-	data2=data2.stack()
-	data2=data2.reset_index()     
-	full_stocks_df = data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+		#full data
+	  
+	full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	stocks_df = full_stocks_df[(full_stocks_df['date'] <= trial_date )]
 	
 	st.dataframe(stocks_df)
 	# Plot Individual Stock Prices
@@ -110,8 +107,8 @@ try:
 	
 	
 	#=======HRP=================
-	stocks_df2 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	full_stocks_df2 =  data2.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	stocks_df2= full_stocks_df2[(full_stocks_df2['date'] <= trial_date )]
 	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
 	hierarchical_portfolio.HRPOpt(returns,S)
