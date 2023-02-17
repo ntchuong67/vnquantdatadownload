@@ -74,8 +74,8 @@ try:
 	data=data.stack()
 	data=data.reset_index()     
 		#full data
-	  
-	full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	data1 = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()  
+	full_stocks_df = data1.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	stocks_df = full_stocks_df[full_stocks_df['date'] <= datetime.strptime(trial_date, '%Y-%m-%d')]
 	
 	st.dataframe(stocks_df)
@@ -107,7 +107,7 @@ try:
 	
 	
 	#=======HRP=================
-	full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+	full_stocks_df2 =  data1.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
 	stocks_df2= full_stocks_df2[(full_stocks_df2['date'] <= datetime.strptime(trial_date, '%Y-%m-%d') )]
 	
 	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
