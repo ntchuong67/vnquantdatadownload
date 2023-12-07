@@ -4,7 +4,7 @@ pandas-datareader
 PyPortfolioOpt
 plotly
 matplotlib
-seaborn
+seaborn==0.11.2
 gunicorn
 httpx
 bs4 
