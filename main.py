@@ -66,7 +66,7 @@ tickers = tickers_string.split(',')
 
 
 
-st.button('Show results'):
+if st.button('Show results'):
 	try:
 		#trial data
 		loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
