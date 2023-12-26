@@ -66,98 +66,98 @@ tickers = tickers_string.split(',')
 
 
 
-
-try:
-	#trial data
-	loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
-	data= loader.download()
-	data=data.stack()
-	data=data.reset_index()     
-	#full data
-	full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	stocks_df = full_stocks_df[full_stocks_df.index <= trial_date]
-	
-	st.dataframe(stocks_df)
-	# Plot Individual Stock Prices
-	fig_price = px.line(stocks_df, title='Price of Individual Stocks')
-	# Plot Individual Cumulative Returns
-	fig_cum_returns = plot_cum_returns(stocks_df, 'Cumulative Returns of Individual Stocks Starting with $100')
-	# Calculatge and Plot Correlation Matrix between Stocks
-	corr_df = stocks_df.corr().round(2)
-	fig_corr = px.imshow(corr_df, text_auto=True, title = 'Correlation between Stocks')
+st.button('Show results'):
+	try:
+		#trial data
+		loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
+		data= loader.download()
+		data=data.stack()
+		data=data.reset_index()     
+		#full data
+		full_stocks_df = data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+		stocks_df = full_stocks_df[full_stocks_df.index <= trial_date]
 		
-	# Calculate expected returns and sample covariance matrix for portfolio optimization later
-	mu = expected_returns.mean_historical_return(stocks_df)
-	S = risk_models.sample_cov(stocks_df)
+		st.dataframe(stocks_df)
+		# Plot Individual Stock Prices
+		fig_price = px.line(stocks_df, title='Price of Individual Stocks')
+		# Plot Individual Cumulative Returns
+		fig_cum_returns = plot_cum_returns(stocks_df, 'Cumulative Returns of Individual Stocks Starting with $100')
+		# Calculatge and Plot Correlation Matrix between Stocks
+		corr_df = stocks_df.corr().round(2)
+		fig_corr = px.imshow(corr_df, text_auto=True, title = 'Correlation between Stocks')
+			
+		# Calculate expected returns and sample covariance matrix for portfolio optimization later
+		mu = expected_returns.mean_historical_return(stocks_df)
+		S = risk_models.sample_cov(stocks_df)
+		
+		# Plot efficient frontier curve
+		#fig = plot_efficient_frontier_and_max_sharpe(mu, S)
+		#fig_efficient_frontier = BytesIO()
+		#fig.savefig(fig_efficient_frontier, format="png")
+		
+		# Get optimized weights
+		ef = EfficientFrontier(mu, S)
+		ef.max_sharpe()
+		weights = ef.clean_weights()
+		expected_annual_return, annual_volatility, sharpe_ratio = ef.portfolio_performance()
+		weights_df = pd.DataFrame.from_dict(weights, orient = 'index')
+		weights_df.columns = ['weights']
+		
+		
+		
+		#=======HRP=================
+		full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
+		stocks_df2= full_stocks_df2[full_stocks_df2.index <= trial_date]
+		
+		returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
+		hierarchical_portfolio.HRPOpt(returns,S)
+		hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df2))
+		weight_hrp = hrp.optimize()
+		expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
+		
+		#====PLOTTING========================================
+		# Display everything on Streamlit
+		st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
+		st.plotly_chart(fig_price)
+		st.plotly_chart(fig_cum_returns)
+		#Weights of portfolios
+		col3, col4 = st.columns(2)
+		with col3:
+			st.subheader("Optimized Max Sharpe Portfolio Weights")
+			st.dataframe(weights_df)
+		with col4:
+			st.subheader("Optimized HRP Portfolio Weights")
+			st.dataframe(weight_hrp)
+		#st.subheader("Optimized Max Sharpe Portfolio Performance")
+		#st.image(fig_efficient_frontier)
+		col5, col6 = st.columns(2)
+		with col5:
+			st.subheader('Expected annual return: {}%'.format((expected_annual_return*100).round(2)))
+			st.subheader('Annual volatility: {}%'.format((annual_volatility*100).round(2)))
+			st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio.round(2)))
+		with col6:
+			st.subheader('Expected annual return: {}%'.format((expected_annual_return_hrp*100).round(2)))
+			st.subheader('Annual volatility: {}%'.format((annual_volatility_hrp*100).round(2)))
+			st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
+		
+		# Calculate returns of portfolio with optimized weights
+		post_df = full_stocks_df[(full_stocks_df.index > trial_date) & (full_stocks_df.index <= end_date) ]
+		post_df2 = full_stocks_df2[(full_stocks_df2.index > trial_date) & (full_stocks_df2.index <= end_date) ]
 	
-	# Plot efficient frontier curve
-	#fig = plot_efficient_frontier_and_max_sharpe(mu, S)
-	#fig_efficient_frontier = BytesIO()
-	#fig.savefig(fig_efficient_frontier, format="png")
+		post_df['Optimized Portfolio Max Sharpe'] = 0
+		post_df2['Optimized Portfolio HRP'] = 0
+		for ticker, weight in weights.items():
+			post_df['Optimized Portfolio Max Sharpe'] += post_df[ticker]*weight
+		for ticker, weight in weight_hrp.items():
+			post_df2['Optimized Portfolio HRP'] += post_df2[ticker]*weight
+		post_df['Optimized Portfolio HRP']= post_df2['Optimized Portfolio HRP']	
 	
-	# Get optimized weights
-	ef = EfficientFrontier(mu, S)
-	ef.max_sharpe()
-	weights = ef.clean_weights()
-	expected_annual_return, annual_volatility, sharpe_ratio = ef.portfolio_performance()
-	weights_df = pd.DataFrame.from_dict(weights, orient = 'index')
-	weights_df.columns = ['weights']
-	
-	
-	
-	#=======HRP=================
-	full_stocks_df2 =  data.pivot_table(values = 'adjust', index = 'date', columns = 'Symbols').dropna()
-	stocks_df2= full_stocks_df2[full_stocks_df2.index <= trial_date]
-	
-	returns = expected_returns.returns_from_prices(stocks_df2, log_returns=False)
-	hierarchical_portfolio.HRPOpt(returns,S)
-	hrp = hierarchical_portfolio.HRPOpt(returns,risk_models.sample_cov(stocks_df2))
-	weight_hrp = hrp.optimize()
-	expected_annual_return_hrp, annual_volatility_hrp, sharpe_ratio_hrp = hrp.portfolio_performance()
-	
-	#====PLOTTING========================================
-	# Display everything on Streamlit
-	st.plotly_chart(fig_corr) # fig_corr is not a plotly chart
-	st.plotly_chart(fig_price)
-	st.plotly_chart(fig_cum_returns)
-	#Weights of portfolios
-	col3, col4 = st.columns(2)
-	with col3:
-		st.subheader("Optimized Max Sharpe Portfolio Weights")
-		st.dataframe(weights_df)
-	with col4:
-		st.subheader("Optimized HRP Portfolio Weights")
-		st.dataframe(weight_hrp)
-	#st.subheader("Optimized Max Sharpe Portfolio Performance")
-	#st.image(fig_efficient_frontier)
-	col5, col6 = st.columns(2)
-	with col5:
-		st.subheader('Expected annual return: {}%'.format((expected_annual_return*100).round(2)))
-		st.subheader('Annual volatility: {}%'.format((annual_volatility*100).round(2)))
-		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio.round(2)))
-	with col6:
-		st.subheader('Expected annual return: {}%'.format((expected_annual_return_hrp*100).round(2)))
-		st.subheader('Annual volatility: {}%'.format((annual_volatility_hrp*100).round(2)))
-		st.subheader('Sharpe Ratio: {}'.format(sharpe_ratio_hrp.round(2)))
-	
-	# Calculate returns of portfolio with optimized weights
-	post_df = full_stocks_df[(full_stocks_df.index > trial_date) & (full_stocks_df.index <= end_date) ]
-	post_df2 = full_stocks_df2[(full_stocks_df2.index > trial_date) & (full_stocks_df2.index <= end_date) ]
-
-	post_df['Optimized Portfolio Max Sharpe'] = 0
-	post_df2['Optimized Portfolio HRP'] = 0
-	for ticker, weight in weights.items():
-		post_df['Optimized Portfolio Max Sharpe'] += post_df[ticker]*weight
-	for ticker, weight in weight_hrp.items():
-		post_df2['Optimized Portfolio HRP'] += post_df2[ticker]*weight
-	post_df['Optimized Portfolio HRP']= post_df2['Optimized Portfolio HRP']	
-
-	# Plot Cumulative Returns of Optimized Portfolio
-	fig_cum_returns_optimized = plot_cum_returns(post_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
-	
-	st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
-	st.plotly_chart(fig_cum_returns_optimized)
-except Exception as e:
-	st.write(e)
-	st.write('Enter correct stock tickers to be included in portfolio separated\
-              commas WITHOUT spaces, e.g. TCB,HPG,SSI,MSN  and hit Enter.')	
+		# Plot Cumulative Returns of Optimized Portfolio
+		fig_cum_returns_optimized = plot_cum_returns(post_df[['Optimized Portfolio Max Sharpe','Optimized Portfolio HRP']], 'Cumulative Returns of Optimized Portfolio Starting with $100')
+		
+		st.subheader("Your Portfolio Consists of {} Stocks".format(tickers_string))	
+		st.plotly_chart(fig_cum_returns_optimized)
+	except Exception as e:
+		st.write(e)
+		st.write('Enter correct stock tickers to be included in portfolio separated\
+	              commas WITHOUT spaces, e.g. TCB,HPG,SSI,MSN  and hit Enter.')	
