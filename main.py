@@ -35,7 +35,7 @@ def plot_efficient_frontier_and_max_sharpe(mu, S):
 	ef_max_sharpe = copy.copy(ef)
 	plotting.plot_efficient_frontier(ef, ax=ax, show_assets=False)
 	# Find the max sharpe portfolio
-	ef_max_sharpe.max_sharpe()
+	ef_max_sharpe.max_sharpe(risk_free_rate=0.0001)
 	ret_tangent, std_tangent, _ = ef_max_sharpe.portfolio_performance()
 	ax.scatter(std_tangent, ret_tangent, marker="*", s=100, c="r", label="Max Sharpe")
 	# Generate random portfolios
