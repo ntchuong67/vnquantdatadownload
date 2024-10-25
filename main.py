@@ -49,8 +49,8 @@ def plot_efficient_frontier_and_max_sharpe(mu, S):
 	ax.legend()
 	return fig
 
-st.set_page_config(page_title = "Stock Portfolio Optimizer - developed by Nguyen Tien Chuong", layout = "wide")
-st.header("Stock Portfolio Optimizer - developed by Nguyen Tien Chuong")
+st.set_page_config(page_title = "Tối ưu danh mục đầu tư -  by QMC- Chuong Nguyen", layout = "wide")
+st.header("Toi uu danh muc dau tu - by QMC- Chuong Nguyen")
 
 col0, col1, col2 = st.columns(3)
 with col0:
