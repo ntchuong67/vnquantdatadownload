@@ -54,11 +54,11 @@ st.header("Toi uu danh muc dau tu - by QMC- Chuong Nguyen")
 
 col0, col1, col2 = st.columns(3)
 with col0:
-    start_date = st.text_input("Start Date, e.g. 2018-01-01")
+    start_date = st.text_input("Ngày bắt đầu tập Train, e.g. 2018-01-01")
 with col1:
-    trial_date = st.text_input("End Traning Date, e.g. 2022-01-01")
+    trial_date = st.text_input("Ngày kết thúc tập Train, e.g. 2022-01-01")
 with col2:
-    end_date = st.text_input("End Date, e.g. 2023-02-01") # it defaults to current date
+    end_date = st.text_input("Ngày kết thúc tập Test, e.g. 2023-02-01") # it defaults to current date
  
 tickers_string = st.text_input('Enter all stock tickers to be included in portfolio separated by commas \
  WITHOUT spaces, e.g. TCB,HPG,SSI,MSN', '').upper()
