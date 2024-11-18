@@ -69,7 +69,7 @@ tickers = tickers_string.split(',')
 if st.button('Show results'):
 	try:
 		#trial data
-		loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "vnd")   
+		loader = DataLoader(tickers, start_date ,end_date, minimal=False, data_source = "cafe")   
 		data= loader.download()
 		data=data.stack()
 		data=data.reset_index()     
